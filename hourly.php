@@ -51,7 +51,7 @@ foreach($types as $type){
         $raw_data = file_get_contents($url);
         $data = json_decode($raw_data,true);
         $data = $data['ticks'];
-        if(sizeof($ticks)<1){
+        if(sizeof($data)<1){
             break;
         }
 
