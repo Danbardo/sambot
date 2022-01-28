@@ -40,31 +40,39 @@ foreach($types as $type){
 
     if($query->num_rows>0){
         $result = $query -> fetch_assoc();
-        $timestamp = $result['m'];
+        if($result['m']>0){
+            $timestamp = $result['m'];
+        }
     }
 
-    $url.="?indexForward=true&sortForward=true&since=$timestamp";
+    while(true){
+        $url.="?indexForward=true&sortForward=true&since=$timestamp";
 
-    $raw_data = file_get_contents($url);
-    $data = json_decode($raw_data,true);
-    $data = $data['ticks'];
+        $raw_data = file_get_contents($url);
+        $data = json_decode($raw_data,true);
+        $data = $data['ticks'];
+        if(sizeof($ticks)<1){
+            break;
+        }
 
-    foreach($data as $tick){
-        $timestamp = $tick['timestamp'];
-        $sql="INSERT INTO tickbyhour
-                (type,open,high,low,close,volume,timestamp,datetime) 
-                VALUES 
-                (
-                    '$type',
-                    '{$tick['open']}',
-                    '{$tick['high']}',
-                    '{$tick['low']}',
-                    '{$tick['close']}',
-                    '{$tick['volume']}',
-                    $timestamp,
-                    FROM_UNIXTIME($timestamp/1000)
-                )";
-        $db->query($sql);
+        foreach($data as $tick){
+            $timestamp = $tick['timestamp'];
+            $sql="INSERT INTO tickbyhour
+                    (type,open,high,low,close,volume,timestamp,datetime) 
+                    VALUES 
+                    (
+                        '$type',
+                        '{$tick['open']}',
+                        '{$tick['high']}',
+                        '{$tick['low']}',
+                        '{$tick['close']}',
+                        '{$tick['volume']}',
+                        $timestamp,
+                        FROM_UNIXTIME($timestamp/1000)
+                    )";
+            $db->query($sql);
+        }
+        $timestamp++;
     }
 }
 

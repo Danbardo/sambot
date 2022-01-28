@@ -3,7 +3,7 @@
 $env = parse_ini_file('env.ini');
 $db=new mysqli("localhost", $env['db_username'], $env['db_password'],$env['db_name']);
 
-$sql="SELECT * FROM tickbyhour WHERE type='BTC' AND datetime > '2019-01-01'";
+$sql="SELECT * FROM tickbyhour WHERE type='BTC'";
 $ticks = $db->query($sql);
 
 $money = 1000;
