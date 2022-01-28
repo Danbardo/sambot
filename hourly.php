@@ -1,7 +1,8 @@
 <?php
 
 // Connect to DB
-$env = parse_ini_file($env);
+set_time_limit(600);
+$env = parse_ini_file('env.ini');
 $db=new mysqli("localhost", $env['db_username'], $env['db_password'],$env['db_name']);
 
 # Create a table if it doesn't already exist
@@ -30,7 +31,7 @@ foreach($types as $type){
     // Assume that no data has been collected yet
     $timestamp = 1514725200000;  # Start of 2018
     // Set coin type in URL
-    $url = $api + $type + "/AUD/tickByTime/hour";
+    $url = $api . $type . "/AUD/tickByTime/hour";
     //print("Starting :" + type)
 
     # Check if any data already exists in the table
